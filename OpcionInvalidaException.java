@@ -1,0 +1,9 @@
+/**
+ * Excepción personalizada para validar selecciones fuera de rango
+ * o entradas inválidas durante la partida.
+ */
+public class OpcionInvalidaException extends Exception {
+    public OpcionInvalidaException(String mensaje) {
+        super(mensaje);
+    }
+}

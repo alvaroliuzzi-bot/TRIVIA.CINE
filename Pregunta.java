@@ -1,0 +1,46 @@
+//package trivia;
+
+/**
+ * Clase que representa una pregunta de trivia de Cine y Series.
+ * Aplica el principio de encapsulamiento con atributos privados,
+ * constructores y métodos getters/setters.
+ */
+public class Pregunta {
+    private String enunciado;
+    private String[] opciones;
+    private int opcionCorrecta; // índice 1-based (1, 2, 3 o 4)
+    private int puntos;
+    private String categoria;
+
+    public Pregunta(String enunciado, String[] opciones, int opcionCorrecta, int puntos, String categoria) {
+        this.enunciado = enunciado;
+        this.opciones = opciones;
+        this.opcionCorrecta = opcionCorrecta;
+        this.puntos = puntos;
+        this.categoria = categoria;
+    }
+
+    public String getEnunciado() {
+        return enunciado;
+    }
+
+    public String[] getOpciones() {
+        return opciones;
+    }
+
+    public int getOpcionCorrecta() {
+        return opcionCorrecta;
+    }
+
+    public int getPuntos() {
+        return puntos;
+    }
+
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public boolean esCorrecta(int opcionSeleccionada) {
+        return opcionSeleccionada == this.opcionCorrecta;
+    }
+}

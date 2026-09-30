@@ -1,0 +1,280 @@
+//package trivia;
+
+import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Scanner;
+
+/**
+ * Clase principal que administra la Trivia / Quiz de Cine y Series por turnos.
+ * Clases encapsuladas (Pregunta, Jugador)
+ * Estructura de datos estándar (Queue<Pregunta> para el flujo de preguntas y ArrayList<Jugador> para el ranking)
+ * Excepción personalizada (OpcionInvalidaException)
+ * Algoritmo de ordenamiento (Bubble Sort para ordenar el leaderboard)
+ * Menú interactivo por consola con Scanner
+ */
+public class JuegoTriviaCineSeries {
+
+    private static Queue<Pregunta> bancoPreguntas = new LinkedList<>();
+    private static ArrayList<Jugador> listaJugadores = new ArrayList<>();
+    private static Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        cargarBancoPreguntas();
+        mostrarBienvenida();
+
+        int opcion = 0;
+        do {
+            mostrarMenuPrincipal();
+            try {
+                System.out.print("Seleccione una opción: ");
+                opcion = scanner.nextInt();
+                scanner.nextLine(); // Limpiar salto de línea
+
+                switch (opcion) {
+                    case 1:
+                        iniciarPartidaPorTurnos();
+                        break;
+                    case 2:
+                        mostrarRankingJugadores();
+                        break;
+                    case 3:
+                        mostrarInstrucciones();
+                        break;
+                    case 4:
+                        System.out.println("\n¡Gracias por jugar a Trivia de Cine y Series! ¡Hasta la próxima!");
+                        break;
+                    default:
+                        throw new OpcionInvalidaException("Opción de menú fuera de rango (1-4).");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("\n[ERROR] Debe ingresar un número entero válido.");
+                scanner.nextLine(); // Limpiar buffer
+            } catch (OpcionInvalidaException e) {
+                System.out.println("\n[ERROR DE JUEGO] " + e.getMessage());
+            } catch (Exception e) {
+                System.out.println("\n[ERROR INESPERADO] " + e.getMessage());
+            }
+        } while (opcion != 4);
+    }
+
+    private static void cargarBancoPreguntas() {
+        bancoPreguntas.clear();
+
+        bancoPreguntas.offer(new Pregunta(
+            "¿Cuál es la película más taquillera de todos los tiempos sin ajustar por inflación?",
+            new String[]{"1. Titanic", "2. Avatar", "3. Avengers: Endgame", "4. Star Wars: Episode VII"},
+            2, 100, "Cine"
+        ));
+
+        bancoPreguntas.offer(new Pregunta(
+            "¿En qué serie de televisión aparece la famosa frase 'Winter is Coming'?",
+            new String[]{"1. The Witcher", "2. Game of Thrones", "3. House of the Dragon", "4. Vikings"},
+            2, 100, "Series"
+        ));
+
+        bancoPreguntas.offer(new Pregunta(
+            "¿Quién dirigió la galardonada película de ciencia ficción 'Inception' (El Origen)?",
+            new String[]{"1. Steven Spielberg", "2. Quentin Tarantino", "3. Christopher Nolan", "4. Denis Villeneuve"},
+            3, 150, "Cine"
+        ));
+
+        bancoPreguntas.offer(new Pregunta(
+            "¿Cuál es el nombre del profesor de química en la serie 'Breaking Bad'?",
+            new String[]{"1. Jesse Pinkman", "2. Walter White", "3. Saul Goodman", "4. Hank Schrader"},
+            2, 100, "Series"
+        ));
+
+        bancoPreguntas.offer(new Pregunta(
+            "¿Qué película ganó el Óscar a la Mejor Película en la edición 2020 haciendo historia como primera cinta de habla no inglesa?",
+            new String[]{"1. Roma", "2. Parasite", "3. Drive My Car", "4. Anatomy of a Fall"},
+            2, 150, "Cine"
+        ));
+
+        bancoPreguntas.offer(new Pregunta(
+            "¿En qué año se estrenó la primera película de 'Star Wars' (Episodio IV: Una Nueva Esperanza)?",
+            new String[]{"1. 1975", "2. 1977", "3. 1980", "4. 1983"},
+            2, 120, "Cine"
+        ));
+    }
+
+    private static void mostrarBienvenida() {
+        System.out.println("=================================================");
+        System.out.println("   TRIVIA POR TURNOS: CINE Y SERIES DE TV       ");
+        System.out.println("=================================================");
+    }
+
+    private static void mostrarMenuPrincipal() {
+        System.out.println("\n--- MENÚ PRINCIPAL ---");
+        System.out.println("1. Iniciar Partida de 2 Jugadores (Por Turnos)");
+        System.out.println("2. Ver Tabla de Posiciones (Ranking)");
+        System.out.println("3. Ver Instrucciones y Reglas");
+        System.out.println("4. Salir");
+    }
+
+    private static void iniciarPartidaPorTurnos() {
+        if (bancoPreguntas.isEmpty()) {
+            cargarBancoPreguntas(); // Recargar si la cola se vació en partidas anteriores
+        }
+
+        System.out.println("\n=== REGISTRO DE JUGADORES ===");
+        System.out.print("Ingrese nombre del Jugador 1: ");
+        String nombre1 = scanner.nextLine().trim();
+        while (nombre1.isEmpty()) {
+            System.out.print("Nombre inválido. Ingrese nombre del Jugador 1: ");
+            nombre1 = scanner.nextLine().trim();
+        }
+
+        System.out.print("Ingrese nombre del Jugador 2: ");
+        String nombre2 = scanner.nextLine().trim();
+        while (nombre2.isEmpty() || nombre2.equalsIgnoreCase(nombre1)) {
+            System.out.print("Nombre inválido o duplicado. Ingrese nombre del Jugador 2: ");
+            nombre2 = scanner.nextLine().trim();
+        }
+
+        Jugador j1 = new Jugador(nombre1);
+        Jugador j2 = new Jugador(nombre2);
+
+        System.out.println("\n¡Partida iniciada entre " + j1.getNombre() + " y " + j2.getNombre() + "!");
+
+        // Cola secundaria para procesar durante la partida
+        Queue<Pregunta> colaPartida = new LinkedList<>(bancoPreguntas);
+        int turno = 1;
+
+        while (!colaPartida.isEmpty()) {
+            Jugador jugadorActual = (turno % 2 != 0) ? j1 : j2;
+            Pregunta preg = colaPartida.poll(); // Extrae la pregunta del frente de la Cola (FIFO)
+
+            System.out.println("\n-------------------------------------------------");
+            System.out.println("TURNO DE: " + jugadorActual.getNombre().toUpperCase());
+            System.out.println("Categoría: " + preg.getCategoria() + " | Puntos en juego: " + preg.getPuntos());
+            System.out.println("Pregunta: " + preg.getEnunciado());
+
+            for (String opcion : preg.getOpciones()) {
+                System.out.println("   " + opcion);
+            }
+
+            int respuesta = pedirRespuestaValida();
+
+            if (preg.esCorrecta(respuesta)) {
+                System.out.println(">> ¡CORRECTO! + " + preg.getPuntos() + " puntos.");
+                jugadorActual.sumarPuntos(preg.getPuntos());
+            } else {
+                System.out.println(">> INCORRECTO. La respuesta correcta era la Opción " + preg.getOpcionCorrecta());
+                jugadorActual.registrarError();
+            }
+
+            System.out.println("Puntaje actual - " + j1.getNombre() + ": " + j1.getPuntaje() + " pts | " + j2.getNombre() + ": " + j2.getPuntaje() + " pts");
+            turno++;
+        }
+
+        // Fin de la partida
+        System.out.println("\n=================================================");
+        System.out.println("              FIN DE LA PARTIDA                  ");
+        System.out.println("=================================================");
+
+        if (j1.getPuntaje() > j2.getPuntaje()) {
+            System.out.println("¡GANADOR/A: " + j1.getNombre() + " con " + j1.getPuntaje() + " puntos!");
+        } else if (j2.getPuntaje() > j1.getPuntaje()) {
+            System.out.println("¡GANADOR/A: " + j2.getNombre() + " con " + j2.getPuntaje() + " puntos!");
+        } else {
+            System.out.println("¡EMPATE! Ambos obtuvieron " + j1.getPuntaje() + " puntos.");
+        }
+
+        // Guardar o actualizar en lista global de ranking
+        agregarOActualizarJugador(j1);
+        agregarOActualizarJugador(j2);
+    }
+
+    private static int pedirRespuestaValida() {
+        int respuesta = 0;
+        boolean valida = false;
+
+        while (!valida) {
+            try {
+                System.out.print("Seleccione su respuesta (1-4): ");
+                respuesta = scanner.nextInt();
+                scanner.nextLine(); // Limpiar salto de línea
+
+                if (respuesta < 1 || respuesta > 4) {
+                    throw new OpcionInvalidaException("Respuesta fuera de rango. Debe seleccionar un número entre 1 y 4.");
+                }
+                valida = true;
+            } catch (InputMismatchException e) {
+                System.out.println("[ERROR] Debe ingresar un número entero entre 1 y 4.");
+                scanner.nextLine();
+            } catch (OpcionInvalidaException e) {
+                System.out.println("[ERROR] " + e.getMessage());
+            }
+        }
+        return respuesta;
+    }
+
+    private static void agregarOActualizarJugador(Jugador nuevo) {
+        boolean encontrado = false;
+        for (Jugador j : listaJugadores) {
+            if (j.getNombre().equalsIgnoreCase(nuevo.getNombre())) {
+                if (nuevo.getPuntaje() > j.getPuntaje()) {
+                    listaJugadores.remove(j);
+                    listaJugadores.add(nuevo);
+                }
+                encontrado = true;
+                break;
+            }
+        }
+        if (!encontrado) {
+            listaJugadores.add(nuevo);
+        }
+    }
+
+    /**
+     * Ordena la lista de jugadores utilizando BUBBLE SORT (de mayor a menor puntaje)
+     * y muestra la tabla de posiciones.
+     */
+    private static void mostrarRankingJugadores() {
+        System.out.println("\n=== TABLA DE POSICIONES (RANKING HISTÓRICO) ===");
+        if (listaJugadores.isEmpty()) {
+            System.out.println("Aún no hay partidas registradas. ¡Juega una partida primero!");
+            return;
+        }
+
+        // Aplicación del algoritmo Bubble Sort para ordenar por puntaje decreciente
+        ordenarRankingBubbleSort();
+
+        System.out.printf("%-5s | %-20s | %-10s | %-10s | %-10s%n", "POS", "JUGADOR", "PUNTAJE", "ACIERTOS", "ERRORES");
+        System.out.println("------------------------------------------------------------------");
+        for (int i = 0; i < listaJugadores.size(); i++) {
+            Jugador j = listaJugadores.get(i);
+            System.out.printf("%-5d | %-20s | %-10d | %-10d | %-10d%n",
+                (i + 1), j.getNombre(), j.getPuntaje(), j.getAciertos(), j.getErrores());
+        }
+    }
+
+    /**
+     * Algoritmo de Ordenamiento Bubble Sort
+     * Ordena la lista de jugadores de mayor a menor puntaje.
+     */
+    private static void ordenarRankingBubbleSort() {
+        int n = listaJugadores.size();
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                if (listaJugadores.get(j).getPuntaje() < listaJugadores.get(j + 1).getPuntaje()) {
+                    // Intercambio (swap)
+                    Jugador temp = listaJugadores.get(j);
+                    listaJugadores.set(j, listaJugadores.get(j + 1));
+                    listaJugadores.set(j + 1, temp);
+                }
+            }
+        }
+    }
+
+    private static void mostrarInstrucciones() {
+        System.out.println("\n=== INSTRUCCIONES Y REGLAS DEL JUEGO ===");
+        System.out.println("1. Se juegan 2 jugadores por turnos alternados.");
+        System.out.println("2. Las preguntas provienen de una estructura Queue (Cola FIFO) de Cine y Series.");
+        System.out.println("3. Cada respuesta correcta otorga puntos según la dificultad de la pregunta.");
+        System.out.println("4. Respuestas fuera del rango (1-4) activan una excepción personalizada (OpcionInvalidaException).");
+        System.out.println("5. Al finalizar, los puntajes se registran y la tabla de posiciones se ordena con Bubble Sort.");
+    }
+}
