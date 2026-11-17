@@ -1,22 +1,37 @@
 <div align="center">
 
-# 🎬 TRIVIA.CINE
+<img src=".github/assets/banner.svg" width="100%" alt="TRIVIA.CINE · trivia de cine y series por turnos">
 
-**Trivia de cine y series para dos jugadores, por turnos, en la consola**
-
-![Java](https://img.shields.io/badge/Java-ED8B00?logo=openjdk&logoColor=white)
-![Consola](https://img.shields.io/badge/interfaz-consola-14231F)
-![Jugadores](https://img.shields.io/badge/jugadores-2%20por%20turnos-1D7A6B)
-![Preguntas](https://img.shields.io/badge/preguntas-6-B8801A)
-![UPA](https://img.shields.io/badge/trabajo-UPA-8C2F5F)
+![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
+![Consola](https://img.shields.io/badge/💻_interfaz-consola-1B1035?style=for-the-badge)
+![Jugadores](https://img.shields.io/badge/👥_jugadores-2_por_turnos-E63946?style=for-the-badge)
+![Preguntas](https://img.shields.io/badge/❓_preguntas-6-F4B400?style=for-the-badge)
+![UPA](https://img.shields.io/badge/🎓_trabajo-UPA-6D5BD0?style=for-the-badge)
 
 </div>
 
----
+<img src=".github/assets/cards.svg" width="100%" alt="Cola FIFO, excepción propia, Bubble Sort y encapsulamiento">
+
+### 🎞️ Una partida
+
+```mermaid
+flowchart LR
+    M(["🎬 Menú"]):::dark --> J1["👤 Jugador 1<br/>responde"]:::red
+    J1 --> J2["👤 Jugador 2<br/>responde"]:::violet
+    J2 -- "quedan preguntas" --> J1
+    J2 -- "fin de la cola" --> R["🏆 Ranking<br/>Bubble Sort"]:::gold
+    R --> M
+    classDef dark fill:#1B1035,stroke:#E63946,color:#fff
+    classDef red fill:#E63946,stroke:#9B1D3A,color:#fff
+    classDef violet fill:#6D5BD0,stroke:#3F2F9E,color:#fff
+    classDef gold fill:#F4B400,stroke:#B8801A,color:#1B1035
+```
 
 ## 🍿 Qué es
 
 Un juego de preguntas de **cine y series** que se juega en la terminal. Dos jugadores se turnan para responder, cada acierto suma puntos según la dificultad y al final se arma una **tabla de posiciones** ordenada de mayor a menor puntaje.
+
+<img src=".github/assets/divider.svg" width="100%">
 
 ## 🎮 Cómo se juega
 
@@ -32,6 +47,8 @@ Un juego de preguntas de **cine y series** que se juega en la terminal. Dos juga
 4. Salir
 ```
 
+<img src=".github/assets/divider.svg" width="100%">
+
 ## ▶️ Cómo ejecutarlo
 
 Hace falta tener instalado el **JDK** (Java 8 o superior).
@@ -40,6 +57,8 @@ Hace falta tener instalado el **JDK** (Java 8 o superior).
 javac *.java
 java JuegoTriviaCineSeries
 ```
+
+<img src=".github/assets/divider.svg" width="100%">
 
 ## 🧩 Qué se aplicó (Programación)
 
@@ -52,6 +71,8 @@ java JuegoTriviaCineSeries
 | **Bubble Sort** para ordenar la tabla de posiciones | `JuegoTriviaCineSeries` |
 | **Menú interactivo** con `Scanner` y control de entradas inválidas | `JuegoTriviaCineSeries` |
 
+<img src=".github/assets/divider.svg" width="100%">
+
 ## 📁 Archivos
 
 | Archivo | Para qué |
@@ -61,6 +82,6 @@ java JuegoTriviaCineSeries
 | `Jugador.java` | Nombre, puntaje, aciertos y errores de cada jugador |
 | `OpcionInvalidaException.java` | Error propio cuando la opción no está entre 1 y 4 |
 
----
+<img src=".github/assets/divider.svg" width="100%">
 
 <div align="center"><sub>Trabajo de la facultad · Universidad Politécnica y Artística del Paraguay (UPA)</sub></div>
