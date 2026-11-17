@@ -8,6 +8,9 @@
 ![Preguntas](https://img.shields.io/badge/❓_preguntas-6-F4B400?style=for-the-badge)
 ![UPA](https://img.shields.io/badge/🎓_trabajo-UPA-6D5BD0?style=for-the-badge)
 
+
+<a href="https://claude.ai/artifact/6RK7nyF9HsXZztpKUsCuZy"><img src="https://img.shields.io/badge/🗂️_VER_TODOS_LOS_PROYECTOS-en_un_solo_lugar-6D5BD0?style=for-the-badge&labelColor=E0457B" height="40" alt="Ver todos los proyectos en un solo lugar"></a>
+
 </div>
 
 <img src=".github/assets/cards.svg" width="100%" alt="Cola FIFO, excepción propia, Bubble Sort y encapsulamiento">
